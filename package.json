@@ -1,0 +1,21 @@
+{
+  "name": "selkie",
+  "version": "1.0.0",
+  "description": "Simple generative template creation",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "selkie": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "generatecoll",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.22",
+    "p5": "^1.9.4"
+  }
+}

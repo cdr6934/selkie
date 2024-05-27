@@ -14,8 +14,12 @@
   "author": "generatecoll",
   "license": "ISC",
   "dependencies": {
+    "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.22",
     "p5": "^1.9.4"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
   }
 }

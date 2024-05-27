@@ -3,12 +3,26 @@
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
 import path from 'path';
+import { Command } from 'commander';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
+import { exec, execSync } from 'child_process';
+import { template as defaultTemplate } from './templates.js';
+import { packageJsonContent } from './package_details.js';
 
 // Convert import.meta.url to a file path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Initialize commander
+const program = new Command();
+program
+    .version('1.0.0')
+    .option('-t, --template <type>', 'specify the template type')
+    .parse(process.argv);
+
+const options = program.opts();
+
+
 
 // Function to create the project
 async function createProject() {
@@ -19,6 +33,7 @@ async function createProject() {
             name: 'folderName',
             message: 'Enter the name of the new folder:',
         },
+
     ]);
 
     // Construct the paths
@@ -29,24 +44,29 @@ async function createProject() {
         // Create folders
         await fs.ensureDir(scriptsPath);
 
+        // Choose the template
+        let htmlContent, sketchContent, randomContent;
+    
+
+        if (options.template === 'default' || !options.template) {
+            htmlContent = defaultTemplate.htmlContent;
+            sketchContent = defaultTemplate.sketchContent;
+            randomContent = defaultTemplate.randomContent;
+        } else {
+            throw new Error('Unknown template type');
+        }
+
         // Create index.html
-        const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>p5.js Sketch</title>
-    <script src="scripts/p5.js"></script>
-    <script src="scripts/sketch.js"></script>
-</head>
-<body>
-</body>
-</html>
-        `;
         await fs.writeFile(path.join(folderPath, 'index.html'), htmlContent.trim());
 
-        // Ensure p5 is installed
-        console.log('Installing p5...');
-        execSync('npm install p5');
+        // Create package.json
+        const packageJsonPath = path.join(folderPath, 'package.json');
+        const packageJson = packageJsonContent.replace(/"project-name"/, `"${folderName}"`);
+        await fs.writeFile(packageJsonPath, packageJson.trim());
+
+       // Install dependencies
+       console.log('Installing dependencies...');
+       execSync('npm install -s', { cwd: folderPath, stdio: 'inherit' });
 
         // Check if p5.min.js exists and copy it to the scripts folder
         const p5Path = path.join(__dirname, 'node_modules', 'p5', 'lib', 'p5.min.js');
@@ -58,18 +78,33 @@ async function createProject() {
         }
 
         // Create sketch.js
-        const sketchContent = `
-function setup() {
-    createCanvas(400, 400);
-}
-
-function draw() {
-    background(220);
-}
-        `;
         await fs.writeFile(path.join(scriptsPath, 'sketch.js'), sketchContent.trim());
+        
+
+         // Create random.js
+         await fs.writeFile(path.join(scriptsPath, 'random.js'), randomContent.trim());
+    
+
+        // Create index.html
+        await fs.writeFile(path.join(folderPath, 'index.html'), htmlContent.trim());
+
 
         console.log(`Project ${folderName} created successfully.`);
+
+        // Ask if the user wants to start the development server
+        const { startServer } = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'startServer',
+                message: 'Do you want to start the development server?',
+                default: true,
+            },
+        ]);
+        
+        if (startServer) {
+            console.log('Starting development server...');
+            execSync('npm start', { cwd: folderPath, stdio: 'inherit' });
+        }
     } catch (error) {
         console.error('Error creating project:', error);
     }

@@ -6,7 +6,7 @@ import path from 'path';
 import { Command } from 'commander';
 import { fileURLToPath } from 'url';
 import { exec, execSync } from 'child_process';
-import { template as defaultTemplate } from './templates.js';
+import { template as defaultTemplate } from './templates/templates.js';
 import { packageJsonContent } from './package_details.js';
 
 // Convert import.meta.url to a file path

@@ -13,8 +13,12 @@ npm install selkie
 
 
 In order to create a new project, use the following after it has been installed. 
-```bash
+
+```
 selkie -t default 
 ```
+
+This will currently just create a basic project that will be a p5 project 
+
 
 

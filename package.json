@@ -1,23 +1,45 @@
 {
   "name": "selkie",
   "version": "1.0.0",
-  "description": "Simple generative template creation",
+  "description": "CLI for scaffolding generative art projects with p5.js, Paper.js, Three.js, GLSL, and ML5.js",
   "main": "index.js",
   "type": "module",
   "bin": {
     "selkie": "./index.js"
   },
+  "files": [
+    "index.js",
+    "templates/",
+    "package_details.js",
+    "README.md"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "generative-art",
+    "creative-coding",
+    "p5js",
+    "paperjs",
+    "threejs",
+    "glsl",
+    "webgl",
+    "scaffold",
+    "cli"
+  ],
   "author": "generatecoll",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/generatecoll/selkie"
+  },
   "dependencies": {
     "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.22",
-    "p5": "^1.9.4"
+    "p5": "^1.9.4",
+    "paper": "^0.12.18",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "live-server": "^1.2.2"
